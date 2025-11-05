@@ -6,19 +6,19 @@ Solution numérique complète pour la gestion d'événements avec invitations é
 ## 🖼️ Aperçu du projet
 
 ### Interface Web - Dashboard
-![Dashboard Organisateur](screenshots/02-Tableau%20de%20bord%20des%20événements%20(statut%20et%20statistiques%20globales).png)
+![Dashboard Organisateur](screenshots/02-Dashboard.png)
 
 ### Gestion des Participants
-![Liste Participants](screenshots/04-Liste%20des%20participants%20et%20leurs%20statuts%20(invité,%20confirmé,%20présent).png)
+![Liste Participants](screenshots/04-Participant.png)
 
 ### Application Mobile - Scan QR
-![App Mobile Scan](screenshots/08-Page%20de%20connexion%20de%20l'agent(Interface%20mobile).png)
+![App Mobile Scan](screenshots/08-Mobile-app-login.png)
 
 ### Email d'Invitation avec QR Code
-![Email Invitation](screenshots/07-Email%20reçu%20par%20l'invité%20contenant%20le%20QR%20code%20personnel.png)
+![Email Invitation](screenshots/07-Invitation-Email.png)
 
 ### Galerie Photos
-![Galerie Photos](screenshots/05-Galerie%20photos%20d'un%20événement.png)
+![Galerie Photos](screenshots/05-Gallery.png)
 
 *Plus de captures d'écran disponibles dans le dossier [screenshots/](screenshots/)*
 
