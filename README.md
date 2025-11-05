@@ -5,7 +5,7 @@ Solution numérique complète pour la gestion d'événements avec invitations é
 
 ## 🖼️ Aperçu du projet
 
-### Interface Web - Gestion des Événements
+### Interface Web - Dashboard
 ![Dashboard Organisateur](screenshots/02-Tableau%20de%20bord%20des%20événements%20(statut%20et%20statistiques%20globales).png)
 
 ### Gestion des Participants
