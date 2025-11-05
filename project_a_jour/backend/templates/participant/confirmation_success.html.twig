@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation réussie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 2em; text-align: center; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2em; display: inline-block; }
+        .btn { margin-top: 2em; background: #28a745; color: #fff; border: none; padding: 1em 2em; border-radius: 4px; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🎉 Confirmation réussie !</h2>
+        <p>Merci {{ participant.fullName ?? 'cher invité' }},<br>
+        Votre participation à l'événement a bien été enregistrée.</p>
+        <p>Vous pouvez fermer cette page.<br>Nous avons hâte de vous accueillir !</p>
+    </div>
+</body>
+</html>

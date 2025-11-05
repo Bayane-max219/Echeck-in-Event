@@ -1,0 +1,83 @@
+{# templates/emails/event_menu_notification.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu de l'Événement</title>
+    <style>
+        body { background: #f8fafc; margin: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        .email-card {
+            max-width: 520px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(111,66,193,0.08);
+            padding: 32px 32px 28px 32px;
+            border: 1px solid #e3e3e3;
+        }
+        .header {
+            background: linear-gradient(90deg,#6f42c1,#0d6efd);
+            color: #fff;
+            border-radius: 16px 16px 0 0;
+            padding: 18px 0 10px 0;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .event-title {
+            font-size: 1.25rem;
+            color: #6f42c1;
+            font-weight: 600;
+            margin: 18px 0 8px 0;
+            text-align: center;
+        }
+        .menu-block {
+            background: #f1f8ff;
+            border-radius: 10px;
+            padding: 18px 18px 12px 18px;
+            margin-bottom: 18px;
+            font-size: 1.07rem;
+            color: #2d3748;
+            white-space: pre-line;
+        }
+        .cta-btn {
+            display: inline-block;
+            margin: 18px auto 0 auto;
+            padding: 14px 34px;
+            background: linear-gradient(90deg,#6f42c1,#0d6efd);
+            color: #fff;
+            font-size: 1.08rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(111,66,193,0.10);
+            transition: background .18s;
+        }
+        .footer {
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+            margin-top: 22px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-card">
+        <div class="header">🍽️ Menu de l'événement</div>
+        <div class="event-title">{{ event.title }}</div>
+        <div class="menu-block">
+            <strong>Ce qui sera servi&nbsp;:</strong><br>
+            {{ event.menu|e }}
+        </div>
+        <div style="text-align:center;">
+            <div style="background:#fffbe6;border:1.5px solid #ffe58f;color:#8c6d1f;padding:14px 20px;border-radius:7px;margin:22px 0;text-align:center;font-size:1.07em;">
+                <strong>En cas d’allergie, de régime particulier ou de tabou alimentaire, merci de contacter le <a href="tel:0348349886" style="color:#8c6d1f;text-decoration:underline;font-weight:bold;">0348349886</a> afin de prévoir un menu adapté.</strong>
+            </div>
+        </div>
+        <div class="footer">
+            Merci de votre vigilance !<br>
+            L'équipe <span style="color:#6f42c1;font-weight:bold;">Echeck-in</span>
+        </div>
+    </div>
+</body>
+</html>

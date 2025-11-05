@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'confirmation.invalid_link_title'|trans }}{% endblock %}
+{% block body %}
+<div class="container mt-5 text-center">
+    <div style="font-size: 3em; color: #dc3545; margin-bottom: 0.5em;">
+        <i class="bi bi-x-circle-fill"></i>
+    </div>
+    <h2>{{ 'confirmation.invalid_link_title'|trans }}</h2>
+    <p>{{ 'confirmation.invalid_link_message'|trans }}</p>
+    <a href="https://echeckin-event.com" class="btn btn-primary mt-3">{{ 'confirmation.go_homepage'|trans }}</a>
+</div>
+{% endblock %}

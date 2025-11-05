@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5" style="max-width: 400px;">
+        <h2 class="mb-4 text-center">Réinitialiser votre mot de passe</h2>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+        {{ form_start(resetForm) }}
+            <div class="mb-3">
+                <label for="{{ resetForm.plainPassword.vars.id }}" class="form-label">Nouveau mot de passe</label>
+                <div style="position: relative;">
+                    {{ form_widget(resetForm.plainPassword, {'attr': {'class': 'form-control', 'id': 'plainPassword', 'style': 'padding-right:2.5rem;'}}) }}
+                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute" style="top: 50%; right: 8px; transform: translateY(-50%); border-radius: 50%; padding: 0.25rem 0.5rem;" onclick="togglePasswordVisibility(this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                {{ form_errors(resetForm.plainPassword) }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ resetForm.confirmPassword.vars.id }}" class="form-label">Confirmez le nouveau mot de passe</label>
+                <div style="position: relative;">
+                    {{ form_widget(resetForm.confirmPassword, {'attr': {'class': 'form-control', 'id': 'confirmPassword', 'style': 'padding-right:2.5rem;'}}) }}
+                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute" style="top: 50%; right: 8px; transform: translateY(-50%); border-radius: 50%; padding: 0.25rem 0.5rem;" onclick="togglePasswordVisibility(this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                {{ form_errors(resetForm.confirmPassword) }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Changer le mot de passe</button>
+        {{ form_end(resetForm) }}
+        <script>
+function togglePasswordVisibility(btn) {
+    const input = btn.parentElement.querySelector('input');
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+</script>
+        <div class="text-center mt-3">
+            <a href="{{ path('app_login') }}" class="btn w-100 mt-2" style="font-weight:500;background:linear-gradient(90deg,#ffb347 0%,#ff7b54 100%);color:#fff;border:none;box-shadow:0 2px 8px #ffb34744;transition:background 0.2s;" onmouseover="this.style.background='linear-gradient(90deg,#ff7b54 0%,#ffb347 100%)'" onmouseout="this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7b54 100%)'">Retour à la connexion</a>
+        </div>
+    </div>
+{% endblock %}

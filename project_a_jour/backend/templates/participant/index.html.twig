@@ -1,0 +1,380 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Participants - {{ event.title }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_events_index') }}">Événements</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_events_show', {id: event.id}) }}">{{ event.title }}</a></li>
+                    <li class="breadcrumb-item active">Participants</li>
+                </ol>
+            </nav>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">Participants</h1>
+                    <p class="text-muted mb-0">{{ event.title }}</p>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('app_participants_new', {eventId: event.id}) }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Ajouter un participant
+                    </a>
+                    <a href="{{ path('app_participants_import', {eventId: event.id}) }}" class="btn btn-outline-primary">
+                        <i class="bi bi-upload me-2"></i>Importer un fichier CSV
+                    </a>
+                    {% if participants|length > 0 %}
+                        <form method="post" action="{{ path('app_participants_send_invitations', {eventId: event.id}) }}" class="d-inline">
+                            <button type="submit" class="btn btn-outline-success" 
+                                    onclick="return confirm('{{ 'Envoyer des invitations à tous les participants en attente ?'|trans }}')">
+                                <i class="bi bi-envelope me-2"></i>Envoyer les invitations
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if participants is empty %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-people display-1 text-muted mb-4"></i>
+                        <h4 class="text-muted">Aucun participant pour le moment.</h4>
+                        <p class="text-muted mb-4">Ajoutez des participants pour commencer.</p>
+                        <div class="btn-group" role="group">
+                            <a href="{{ path('app_participants_new', {eventId: event.id}) }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Ajouter un participant
+                            </a>
+                            <a href="{{ path('app_participants_import', {eventId: event.id}) }}" class="btn btn-outline-primary">
+                                <i class="bi bi-upload me-2"></i>Importer un fichier CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="mb-0">{{ participants|length }}</h4>
+                                <p class="mb-0">Total des participants</p>
+                            </div>
+                            <i class="bi bi-people fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="mb-0">{{ participants|filter(p => p.status == 'checked_in')|length }}</h4>
+                                <p class="mb-0">Présent</p>
+                            </div>
+                            <i class="bi bi-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="mb-0">{{ participants|filter(p => p.status == 'pending')|length }}</h4>
+                                <p class="mb-0">En attente</p>
+                            </div>
+                            <i class="bi bi-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                {% set presents = participants|filter(p => p.status == 'checked_in')|length %}
+{% set total = participants|length %}
+<h4 class="mb-0">{{ total > 0 ? ((presents / total) * 100)|round(1) : 0 }}%</h4>
+                                <p class="mb-0">Taux de présence</p>
+                            </div>
+                            <i class="bi bi-bar-chart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Liste des participants</h5>
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- Bulk delete button (hidden by default) -->
+                                <form method="post" action="{{ path('app_participants_bulk_delete', {eventId: event.id}) }}" id="bulkDeleteForm" style="display: none;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('bulk_delete') }}">
+                                    <input type="hidden" name="participant_ids" id="selectedParticipantIds">
+                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer les participants sélectionnés ?')">
+                                        <i class="bi bi-trash me-1"></i>Supprimer (<span id="selectedCount">0</span>)
+                                    </button>
+                                </form>
+                                <div class="input-group" style="width: 300px;">
+                                    <input type="text" class="form-control" placeholder="Rechercher des participants" id="searchInput">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="participantsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="50">
+                                            <input type="checkbox" id="selectAll" class="form-check-input">
+                                        </th>
+                                        <th>Participant</th>
+                                        <th>Contact</th>
+                                        <th>Entreprise</th>
+                                        <th>Statut</th>
+                                        <th>Check-in</th>
+                                        <th>Code QR</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for participant in participants %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="form-check-input participant-checkbox" 
+                                                       value="{{ participant.id }}" data-participant-name="{{ participant.fullName }}">
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                                                        <span class="text-white fw-bold">{{ participant.firstName|slice(0,1) }}{{ participant.lastName|slice(0,1) }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">{{ participant.fullName }}</h6>
+                                                        {% if participant.position %}
+                                                            <small class="text-muted">{{ participant.position }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>{{ participant.email }}</div>
+                                                {% if participant.phone %}
+                                                    <small class="text-muted">{{ participant.phone }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ participant.company ?? '-' }}</td>
+                                            <td>
+                                                {% if participant.status == 'invited' %}
+    <span class="badge bg-warning text-dark status-badge-uniform">Invité</span>
+{% elseif participant.status == 'pending' %}
+    <span class="badge bg-secondary status-badge-uniform">En attente</span>
+{% elseif participant.status == 'checked_in' %}
+    <span class="badge bg-success status-badge-uniform">Présent</span>
+{% elseif participant.status == 'confirmed' %}
+    <span class="badge bg-info status-badge-uniform">Confirmé</span>
+{% elseif participant.status == 'declined' %}
+    <span class="badge bg-danger status-badge-uniform">Décliné</span>
+{% else %}
+    <span class="badge bg-secondary status-badge-uniform">{{ participant.status }}</span>
+{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if participant.isCheckedIn %}
+                                                    <div class="text-success">
+                                                        <i class="bi bi-check-circle me-1"></i>
+                                                        {{ participant.checkIns.first.checkedInAt|date('M j, H:i') }}
+                                                    </div>
+                                                {% else %}
+                                                    <span class="text-muted">Non pointé</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="showQrCode('{{ participant.qrCode }}', '{{ participant.fullName }}')">
+                                                    <i class="bi bi-qr-code"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ path('app_participants_edit', {eventId: event.id, id: participant.id}) }}" 
+                                                       class="btn btn-sm btn-outline-secondary" title="Modifier">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <form method="post" action="{{ path('app_participants_delete', {eventId: event.id, id: participant.id}) }}" 
+                                                          onsubmit="return confirm('{{ 'Êtes-vous sûr de vouloir supprimer ce participant ?'|trans }}');" 
+                                                          class="d-inline">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
+                                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Supprimer">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form method="post" action="{{ path('app_participants_send_invitation', {eventId: event.id, participantId: participant.id}) }}" class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-outline-success" title="{{ 'Envoyer une invitation'|trans }}">
+                                                            <i class="bi bi-envelope"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">QR Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="qrCodeContainer"></div>
+                <p class="mt-3 mb-0" id="participantName"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-sm {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.status-badge-uniform {
+    width: 100px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0 12px;
+    border-radius: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+</style>
+
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const tableRows = document.querySelectorAll('#participantsTable tbody tr');
+    
+    tableRows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+});
+
+// Bulk selection functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const participantCheckboxes = document.querySelectorAll('.participant-checkbox');
+    const bulkDeleteForm = document.getElementById('bulkDeleteForm');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const selectedParticipantIds = document.getElementById('selectedParticipantIds');
+
+    // Select all functionality
+    selectAllCheckbox.addEventListener('change', function() {
+        participantCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateBulkDeleteButton();
+    });
+
+    // Individual checkbox functionality
+    participantCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSelectAllState();
+            updateBulkDeleteButton();
+        });
+    });
+
+    function updateSelectAllState() {
+        const checkedBoxes = document.querySelectorAll('.participant-checkbox:checked');
+        const totalBoxes = participantCheckboxes.length;
+        
+        if (checkedBoxes.length === 0) {
+            selectAllCheckbox.indeterminate = false;
+            selectAllCheckbox.checked = false;
+        } else if (checkedBoxes.length === totalBoxes) {
+            selectAllCheckbox.indeterminate = false;
+            selectAllCheckbox.checked = true;
+        } else {
+            selectAllCheckbox.indeterminate = true;
+            selectAllCheckbox.checked = false;
+        }
+    }
+
+    function updateBulkDeleteButton() {
+        const checkedBoxes = document.querySelectorAll('.participant-checkbox:checked');
+        const selectedIds = Array.from(checkedBoxes).map(cb => cb.value);
+        
+        if (selectedIds.length > 0) {
+            bulkDeleteForm.style.display = 'block';
+            selectedCountSpan.textContent = selectedIds.length;
+            selectedParticipantIds.value = selectedIds.join(',');
+        } else {
+            bulkDeleteForm.style.display = 'none';
+            selectedCountSpan.textContent = '0';
+            selectedParticipantIds.value = '';
+        }
+    }
+});
+
+// QR Code modal
+function showQrCode(qrCode, participantName) {
+    document.getElementById('participantName').textContent = participantName;
+    
+    // Generate QR code using a library or API
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    qrCodeContainer.innerHTML = `
+        <div class="d-flex justify-content-center">
+            <div class="border p-3 rounded">
+                <div style="font-family: monospace; font-size: 12px; word-break: break-all;">
+                    ${qrCode}
+                </div>
+                <small class="text-muted d-block mt-2">QR Code: ${qrCode}</small>
+            </div>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('qrCodeModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

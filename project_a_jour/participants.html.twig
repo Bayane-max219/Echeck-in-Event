@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Participants - {{ event.title }} - Echeck-in Event{% endblock %}
+
+{% block body %}
+<h1 style="color:red">TEST EVENT PARTICIPANTS TEMPLATE</h1>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('app_events_index') }}">Events</a></li>
+                            <li class="breadcrumb-item"><a href="{{ path('app_events_show', {id: event.id}) }}">{{ event.title }}</a></li>
+                            <li class="breadcrumb-item active">Participants</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-people me-2"></i>Participants
+                    </h1>
+                    <p class="text-muted mb-0">{{ event.title }}</p>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('app_events_show', {id: event.id}) }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Event
+                    </a>
+                    <a href="{{ path('app_events_export', {id: event.id}) }}" class="btn btn-outline-primary">
+                        <i class="bi bi-download me-2"></i>Export
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Participants</h6>
+                            <h3 class="mb-0">{{ event.participants|length }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Checked In</h6>
+                            <h3 class="mb-0">{{ event.checkIns|length }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-check-circle fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Pending</h6>
+                            <h3 class="mb-0">{{ event.participants|length - event.checkIns|length }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-clock fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Invitations</h6>
+                            <h3 class="mb-0">{{ event.invitations|length }}</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-envelope fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participants List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-list me-2"></i>Participants List
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if event.participants|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
+                                        <th>Check-in Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for participant in event.participants %}
+                                        {% set checkedIn = false %}
+                                        {% set checkInTime = null %}
+                                        {% for checkIn in event.checkIns %}
+                                            {% if checkIn.participant.id == participant.id %}
+                                                {% set checkedIn = true %}
+                                                {% set checkInTime = checkIn.checkedInAt %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm bg-{{ checkedIn ? 'success' : 'secondary' }} rounded-circle d-flex align-items-center justify-content-center me-3">
+                                                        <i class="bi bi-person text-white"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong>{{ participant.firstName }} {{ participant.lastName }}</strong>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ participant.email }}</td>
+                                            <td>{{ participant.phone ?? '-' }}</td>
+                                            <td>
+                                                {% if checkedIn %}
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle me-1"></i>Checked In
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="bi bi-clock me-1"></i>Pending
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if checkInTime %}
+                                                    {{ checkInTime|date('d/m/Y H:i') }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-primary" 
+                                                            data-bs-toggle="tooltip" 
+                                                            title="View Details">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary" 
+                                                            data-bs-toggle="tooltip" 
+                                                            title="Send Message">
+                                                        <i class="bi bi-envelope"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-people display-1 text-muted"></i>
+                            <h4 class="mt-3">No Participants Yet</h4>
+                            <p class="text-muted">No participants have been registered for this event.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-sm {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+</style>
+{% endblock %}

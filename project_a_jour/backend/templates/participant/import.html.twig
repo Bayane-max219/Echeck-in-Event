@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import Participants - {{ event.title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">
+                        <i class="bi bi-upload me-2"></i>Importer des participants depuis un CSV
+                    </h4>
+                    <p class="text-muted mb-0">{{ event.title }}</p>
+                </div>
+                <div class="card-body">
+                    <!-- Instructions -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="bi bi-info-circle me-2"></i>Format requis du CSV
+                        </h6>
+                        <p class="mb-2">Votre fichier CSV doit contenir les colonnes suivantes (insensibles à la casse) :</p>
+                        <ul class="mb-2">
+                            <li><strong>prenom</strong> - Obligatoire</li>
+                            <li><strong>nom</strong> - Obligatoire</li>
+                            <li><strong>email</strong> - Obligatoire</li>
+                            <li><strong>telephone</strong> - Optionnel</li>
+                            <li><strong>entreprise</strong> - Optionnel</li>
+                            <li><strong>poste</strong> - Optionnel</li>
+                        </ul>
+                        <p class="mb-0">
+                            <small>
+                                <strong>Note :</strong> Les participants ayant déjà une adresse e-mail pour cet événement seront ignorés.
+                            </small>
+                        </p>
+                    </div>
+
+                    <!-- Sample CSV -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Exemple de format CSV</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre class="bg-light p-3 rounded"><code>prenom,nom,email,telephone,entreprise,poste
+Jean,Durand,jean.durand@example.com,+33612345678,SociétéX,Manager
+Marie,Leblanc,marie.leblanc@example.com,,Tech Innov,Développeuse
+Paul,Martin,paul.martin@example.com,+33687654321,StartupY,PDG</code></pre>
+                            <a href="data:text/csv;charset=utf-8,prenom%2Cnom%2Cemail%2Ctelephone%2Centreprise%2Cposte%0AJean%2CDurand%2Cjean.durand%40example.com%2C%2B33612345678%2CSoci%C3%A9t%C3%A9X%2CManager%0AMarie%2CLeblanc%2Cmarie.leblanc%40example.com%2C%2CTech%20Innov%2CD%C3%A9veloppeuse%0APaul%2CMartin%2Cpaul.martin%40example.com%2C%2B33687654321%2CStartupY%2CPDG" 
+                               download="exemple_participants.csv" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download me-2"></i>Télécharger un exemple CSV
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Upload Form -->
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="csv_file" class="form-label">Sélectionner un fichier CSV</label>
+                            <input type="file" class="form-control" id="csv_file" name="csv_file" 
+                                   accept=".csv" required>
+                            <div class="invalid-feedback">
+                                Veuillez sélectionner un fichier CSV.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_participants_index', {eventId: event.id}) }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i>Importer les participants
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// File validation
+document.getElementById('csv_file').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const fileName = file.name.toLowerCase();
+        if (!fileName.endsWith('.csv')) {
+            this.setCustomValidity('Please select a CSV file.');
+        } else {
+            this.setCustomValidity('');
+        }
+    }
+});
+</script>
+{% endblock %}

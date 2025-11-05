@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation réussie</title>
+    <style>
+        body {
+            background: #f6f7fb;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .confirmation-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            max-width: 400px;
+            margin: 60px auto 0 auto;
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .confirmation-card .icon {
+            font-size: 2.5em;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .confirmation-card h2 {
+            font-size: 1.5em;
+            margin: 0 0 10px 0;
+        }
+        .confirmation-card p {
+            margin: 8px 0;
+            color: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-card">
+        <div class="icon">🎉</div>
+        <h2>Félicitations&nbsp;!</h2>
+        <p>Merci {{ agent.nom }},<br>Votre compte agent a bien été confirmé.</p>
+        <p>Vous pouvez fermer cette page.<br>Nous avons hâte de vous accueillir !</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l’agent {{ agent.nom }} - Modifier l’agent - Gestion des agents{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+    <i class="bi bi-pencil me-2"></i>Modifier l’agent {{ agent.nom }}
+</h1>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('app_agents_show', {id: agent.id}) }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-2"></i>Retour
+</a>
+<a href="{{ path('app_agents_index') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-list me-2"></i>Liste des agents
+</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Informations sur l’agent</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.nom, 'Nom complet', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.nom) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.email, 'Adresse e-mail', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.password, 'Nouveau mot de passe (optionnel)') }}
+                                {{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Laisser vide pour garder le mot de passe actuel'}}) }}
+                                {{ form_errors(form.password) }}
+                                <div class="form-text">Laisser ce champ vide si vous ne voulez pas changer le mot de passe.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.status, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.status, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.status) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.roles, 'Rôles', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="mt-2">
+                                {{ form_widget(form.roles) }}
+                            </div>
+                            {{ form_errors(form.roles) }}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ path('app_agents_show', {id: agent.id}) }}" class="btn btn-secondary">
+    <i class="bi bi-x-circle me-2"></i>Annuler
+</a>
+<button type="submit" class="btn btn-primary">
+    <i class="bi bi-check-circle me-2"></i>Enregistrer les modifications
+</button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

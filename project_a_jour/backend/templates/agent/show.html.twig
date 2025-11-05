@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ agent.nom }} - Agent - Nom{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-person me-2"></i>{{ agent.nom }}
+                </h1>
+                <div class="btn-group" role="group">
+                    <a href="{{ path('app_agents_index') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+</a>
+<a href="{{ path('app_agents_edit', {id: agent.id}) }}" class="btn btn-primary">
+    <i class="bi bi-pencil me-2"></i>Modifier
+</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Informations sur l'agent</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Nom complet</label>
+                            <p class="h6">{{ agent.nom }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Adresse e-mail</label>
+                            <p class="h6">{{ agent.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Statut</label>
+<div>
+    {% if agent.isConfirmed %}
+        <span class="badge bg-success fs-6">
+            <i class="bi bi-check-circle me-1"></i>Confirmé
+        </span>
+    {% else %}
+        <span class="badge bg-warning text-dark fs-6">
+            <i class="bi bi-hourglass-split me-1"></i>Non confirmé
+        </span>
+    {% endif %}
+</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Rôles</label>
+                            <div>
+                                {% for role in agent.roles %}
+                                    {% set roleClass = role == 'ROLE_ADMIN' ? 'danger' : (role == 'ROLE_SUPERVISOR' ? 'warning' : 'info') %}
+                                    <span class="badge bg-{{ roleClass }} me-1">
+                                        {% if role == 'ROLE_ADMIN' %}
+                                            <i class="bi bi-shield-fill-check me-1"></i>Administrateur
+                                        {% elseif role == 'ROLE_SUPERVISOR' %}
+                                            <i class="bi bi-eye-fill me-1"></i>Superviseur
+                                        {% elseif role == 'ROLE_AGENT' %}
+                                            <i class="bi bi-person-badge me-1"></i>Agent
+                                        {% else %}
+                                            {{ role }}
+                                        {% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Créé le</label>
+                            <p class="h6">{{ agent.createdAt|date('d/m/Y à H:i') }}</p>
+                        </div>
+                        {% if agent.updatedAt %}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Dernière mise à jour</label>
+                            <p class="h6">{{ agent.updatedAt|date('d/m/Y à H:i') }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+    <a href="{{ path('app_agents_edit', {id: agent.id}) }}" class="btn btn-primary">
+    <i class="bi bi-pencil me-2"></i>Modifier l'agent
+</a>
+<a href="{{ path('app_agents_resend_confirmation', {id: agent.id}) }}" class="btn btn-warning">
+    <i class="bi bi-envelope-arrow-up me-2"></i>Renvoyer l'e-mail de confirmation
+</a>
+<form method="post" action="{{ path('app_agents_delete', {id: agent.id}) }}" 
+      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet agent ? Cette action ne peut pas être annulée.');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
+    <button class="btn btn-outline-danger w-100" type="submit">
+        <i class="bi bi-trash me-2"></i>Supprimer l'agent
+    </button>
+</form>
+</div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <div class="avatar-lg bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3">
+                            <i class="bi bi-person text-white" style="font-size: 2rem;"></i>
+                        </div>
+                        <h6 class="text-muted">Détails de l’agent</h6>
+                        <p class="h5">{{ agent.createdAt|date('F Y', 'Europe/Paris')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+}
+</style>
+{% endblock %}

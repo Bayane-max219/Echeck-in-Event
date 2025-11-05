@@ -1,0 +1,39 @@
+<body style="background: #f6f7fb; padding: 0; margin: 0; font-family: 'Segoe UI', Arial, sans-serif;">
+  <table width="100%" style="background: #f6f7fb; padding: 40px 0;">
+    <tr>
+      <td align="center">
+        <table width="400" style="background: #fff; border-radius: 22px; box-shadow: 0 4px 24px #0002; padding: 36px 32px 32px 32px;">
+          <tr>
+            <td align="center" style="padding-bottom: 18px;">
+              <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Echeck-in Event" width="64" style="margin-bottom: 10px;"/>
+              <h2 style="color: #23272f; margin: 0 0 10px 0; font-weight: 700; font-size: 2rem;">Réinitialisation de votre mot de passe</h2>
+              <div style="color: #6a6f7a; font-size: 1rem; margin-bottom: 18px;">Vous avez demandé la réinitialisation de votre mot de passe.</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="color: #444; font-size: 1.08rem; padding-bottom: 18px; text-align: center;">
+              Bonjour <b>{{ user.email }}</b>,<br><br>
+Vous avez demandé à réinitialiser votre mot de passe.<br>
+Cliquez sur le bouton ci-dessous pour en créer un nouveau :
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-bottom: 28px;">
+              <a href="{{ url('app_reset_password', {token: resetToken}) }}"
+                 style="display: inline-block; background: linear-gradient(90deg, #5b7cff 0%, #6d5bff 100%); color: #fff; text-decoration: none; padding: 13px 0; border-radius: 8px; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px; width: 100%; max-width: 270px; text-align: center; box-shadow: 0 2px 8px #5b7cff44;">
+                Réinitialiser mon mot de passe
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="color: #888; font-size: 13px; text-align: center;">
+              Ce lien expirera dans 1 heure.<br>
+Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet e-mail.
+            </td>
+          </tr>
+        </table>
+        <p style="font-size: 12px; color: #aaa; margin-top: 18px;">© {{ "now"|date("Y") }} Echeck-in Event. Tous droits réservés.</p>
+      </td>
+    </tr>
+  </table>
+</body>

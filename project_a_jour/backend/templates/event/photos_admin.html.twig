@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des photos - {{ event.title }}{% endblock %}
+{% block body %}
+<div class="container mt-4">
+    <h2>Photos de l’événement {{ event.title }}</h2>
+    <div class="mb-4">
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+            <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                    {{ form_widget(form.filename) }}
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit">Ajouter une photo</button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <h5>Photos téléversées</h5>
+    <div class="row" id="photo-list">
+        {% for photo in photos %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="card photo-selectable" data-photo-id="{{ photo.id }}">
+                    <img src="{{ asset('uploads/event_photos/' ~ photo.filename) }}" class="card-img-top selectable-img" alt="Photo événement">
+                    <form method="post" action="{{ path('event_photo_delete', {'id': photo.id}) }}" class="delete-form" style="display:none;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ photo.id) }}">
+                    </form>
+                    <div class="select-overlay d-none"></div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-muted">Aucune photo pour cet événement.</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="photo-actions" class="d-none" style="margin-top: 18px;">
+        <button id="select-all-btn" class="btn btn-secondary btn-sm">Tout sélectionner</button>
+        <button id="deselect-all-btn" class="btn btn-outline-secondary btn-sm">Tout désélectionner</button>
+        <button id="delete-selected-btn" class="btn btn-danger btn-sm">Supprimer les sélectionnées</button>
+    </div>
+    <style>
+        .photo-selectable.border-primary {
+            border: 3px solid #007bff !important;
+        }
+        .photo-selectable {
+            cursor: pointer;
+            transition: box-shadow 0.2s, border 0.2s;
+        }
+    </style>
+    <script>
+        const photoCards = document.querySelectorAll('.photo-selectable');
+        const actionsBar = document.getElementById('photo-actions');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const deselectAllBtn = document.getElementById('deselect-all-btn');
+        const deleteBtn = document.getElementById('delete-selected-btn');
+        let selected = new Set();
+
+        photoCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('form')) return;
+                const id = card.getAttribute('data-photo-id');
+                card.classList.toggle('border-primary');
+                card.classList.toggle('shadow-lg');
+                if (selected.has(id)) {
+                    selected.delete(id);
+                } else {
+                    selected.add(id);
+                }
+                updateActions();
+            });
+        });
+        function updateActions() {
+            if (selected.size > 0) {
+                actionsBar.classList.remove('d-none');
+            } else {
+                actionsBar.classList.add('d-none');
+            }
+        }
+        selectAllBtn.addEventListener('click', () => {
+            photoCards.forEach(card => {
+                const id = card.getAttribute('data-photo-id');
+                if (!selected.has(id)) {
+                    card.classList.add('border-primary','shadow-lg');
+                    selected.add(id);
+                }
+            });
+            updateActions();
+        });
+        deselectAllBtn.addEventListener('click', () => {
+            photoCards.forEach(card => {
+                const id = card.getAttribute('data-photo-id');
+                card.classList.remove('border-primary','shadow-lg');
+                selected.delete(id);
+            });
+            updateActions();
+        });
+        deleteBtn.addEventListener('click', () => {
+            if (confirm('Êtes-vous sûr de vouloir supprimer les photos sélectionnées ?')) {
+                selected.forEach(id => {
+                    const form = document.querySelector('.photo-selectable[data-photo-id="'+id+'"] .delete-form');
+                    if (form) form.submit();
+                });
+            }
+        });
+    </script>
+    <a href="{{ path('app_events_show', {id: event.id}) }}" class="btn btn-secondary mt-3">Retour à l’événement</a>
+</div>
+{% endblock %}

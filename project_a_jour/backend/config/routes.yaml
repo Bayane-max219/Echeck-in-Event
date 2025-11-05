@@ -1,0 +1,111 @@
+api_login_check:
+    path: /api/login_check
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    methods: GET
+
+app_register:
+    path: /register
+    controller: App\Controller\SecurityController::register
+
+app_dashboard:
+    path: /dashboard
+    controller: App\Controller\DashboardController::index
+
+app_events:
+    path: /events
+    controller: App\Controller\EventController::index
+
+app_events_index:
+    path: /events
+    controller: App\Controller\EventController::index
+
+app_events_new:
+    path: /events/new
+    controller: App\Controller\EventController::new
+
+app_events_show:
+    path: /events/{id}
+    controller: App\Controller\EventController::show
+
+app_events_edit:
+    path: /events/{id}/edit
+    controller: App\Controller\EventController::edit
+
+app_events_delete:
+    path: /events/{id}/delete
+    controller: App\Controller\EventController::delete
+
+app_events_export:
+    path: /events/{id}/export
+    controller: App\Controller\EventController::export
+
+app_profile:
+    path: /profile
+    controller: App\Controller\SecurityController::profile
+
+app_participants_index:
+    path: /events/{eventId}/participants
+    controller: App\Controller\ParticipantController::index
+
+app_participants_new:
+    path: /events/{eventId}/participants/new
+    controller: App\Controller\ParticipantController::new
+
+app_participants_show:
+    path: /participants/{id}
+    controller: App\Controller\ParticipantController::show
+
+app_participants_edit:
+    path: /events/{eventId}/participants/{id}/edit
+    controller: App\Controller\ParticipantController::edit
+
+app_participants_delete:
+    path: /events/{eventId}/participants/{id}/delete
+    controller: App\Controller\ParticipantController::delete
+    methods: [POST]
+
+app_participants_import:
+    path: /events/{eventId}/participants/import
+    controller: App\Controller\ParticipantController::import
+
+app_participants_send_invitations:
+    path: /events/{eventId}/participants/send-invitations
+    controller: App\Controller\ParticipantController::sendInvitations
+    methods: [POST]
+
+app_participants_send_invitation:
+    path: /events/{eventId}/participants/{participantId}/send-invitation
+    controller: App\Controller\ParticipantController::sendInvitation
+
+app_agents_index:
+    path: /agents
+    controller: App\Controller\AgentController::index
+
+app_agents_new:
+    path: /agents/new
+    controller: App\Controller\AgentController::new
+
+app_agents_show:
+    path: /agents/{id}
+    controller: App\Controller\AgentController::show
+
+app_agents_edit:
+    path: /agents/{id}/edit
+    controller: App\Controller\AgentController::edit
+
+app_agents_delete:
+    path: /agents/{id}/delete
+    controller: App\Controller\AgentController::delete
+    methods: [POST]
+
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute

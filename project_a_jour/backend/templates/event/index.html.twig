@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des événements - Titre{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-calendar-event me-2"></i>Mes événements
+                </h1>
+                <a href="{{ path('app_events_new') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Nouvel événement
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if events is empty %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-calendar-x display-1 text-muted mb-4"></i>
+                         <h4 class="text-muted">Aucun événement pour le moment.</h4>
+                         <p class="text-muted mb-4">Créez votre premier événement.</p>
+                        <a href="{{ path('app_events_new') }}" class="btn btn-primary btn-lg">
+                             <i class="bi bi-plus-circle me-2"></i>Créez votre premier événement
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            {% for event in events %}
+                <div class="col-xl-4 col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm event-card">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">{{ event.title }}</h5>
+                                {% set statusClass = event.status == 'active' ? 'success' : (event.status == 'draft' ? 'warning' : (event.status == 'cancelled' ? 'danger' : (event.status == 'completed' ? 'secondary' : 'secondary'))) %}
+                                <span class="badge bg-{{ statusClass }} fs-6 status-badge-uniform">{{ event.status == 'active' ? 'Actif' : (event.status == 'draft' ? 'Brouillon' : (event.status == 'cancelled' ? 'Annulé' : (event.status == 'completed' ? 'Terminé' : event.status))) }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if event.description %}
+                                <p class="card-text text-muted">{{ event.description|slice(0, 100) }}{% if event.description|length > 100 %}...{% endif %}</p>
+                            {% endif %}
+                            
+                            <div class="event-details mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-calendar3 text-primary me-2"></i>
+                                    <span>{{ event.startDate|date('d F Y', 'Europe/Paris', 'fr')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-clock text-primary me-2"></i>
+                                    <span>{{ event.startDate|date('H:i', 'Europe/Paris') }}{% if event.endDate %} - {{ event.endDate|date('H:i', 'Europe/Paris') }}{% endif %}</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-geo-alt text-primary me-2"></i>
+                                    <span>{{ event.location ? event.location : 'Lieu non renseigné' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <h6 class="text-primary mb-0">{{ event.participantCount }}</h6>
+                                        <small class="text-muted">Participants</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="text-success mb-0">{{ event.checkedInCount }}</h6>
+                                    <small class="text-muted">Présents</small>
+                                </div>
+                            </div>
+
+                            {% if event.participantCount > 0 %}
+                                <div class="progress mb-3" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" 
+                                         style="width: {{ event.attendanceRate }}%" 
+                                         aria-valuenow="{{ event.attendanceRate }}" 
+                                         aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ event.attendanceRate|round(1) }}% de présence</small>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="btn-group w-100" role="group">
+                                <a href="{{ path('app_events_show', {id: event.id}) }}" 
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i>Voir
+                                </a>
+                                <a href="{{ path('app_participants_index', {eventId: event.id}) }}" 
+                                   class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-people me-1"></i>Participants
+                                </a>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                         <li><a class="dropdown-item" href="{{ path('app_events_edit', {id: event.id}) }}">
+                                             <i class="bi bi-pencil me-2"></i>Modifier
+                                        </a></li>
+                                         <li><a class="dropdown-item" href="{{ path('app_events_export', {id: event.id}) }}">
+                                             <i class="bi bi-download me-2"></i>Exporter
+                                        </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="post" action="{{ path('app_events_delete', {id: event.id}) }}" 
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');" 
+                                                  class="d-inline">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                                <button class="dropdown-item text-danger" type="submit">
+                                                    <i class="bi bi-trash me-2"></i>Supprimer
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.event-card {
+    transition: all 0.3s ease;
+    border: none;
+}
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+.event-details i {
+    width: 16px;
+}
+.status-badge-uniform {
+    width: 100px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0 12px;
+    border-radius: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+</style>
+{% endblock %}

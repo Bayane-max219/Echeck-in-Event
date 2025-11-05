@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - ECheck{% endblock %}
+
+{% block body %}
+<div class="min-vh-100 d-flex align-items-center bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-qr-code-scan display-4 text-primary mb-3"></i>
+                            <h1 class="h4 text-gray-900 mb-2">Créer un compte</h1>
+                            <p class="text-muted">Rejoignez la plateforme pour participer à nos événements.</p>
+                        </div>
+
+                        {# Affichage des messages flash #}
+                        {% for label, messages in app.flashes() %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label == 'success' ? 'success' : (label == 'error' ? 'danger' : label) }} alert-dismissible fade show" role="alert" style="{% if label == 'error' %}background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; font-weight: 600;{% endif %}">
+                                    <i class="bi bi-{{ label == 'error' ? 'exclamation-triangle' : (label == 'success' ? 'check-circle' : 'info-circle') }} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <form method="post" action="{{ path('app_register') }}" class="needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">Prénom</label>
+                                    <input type="text" name="firstName" id="firstName" 
+                                           class="form-control form-control-lg" required value="{{ last_firstName|default('') }}">
+                                    <div class="invalid-feedback">
+                                        Le prénom est obligatoire.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Nom</label>
+                                    <input type="text" name="lastName" id="lastName" 
+                                           class="form-control form-control-lg" required value="{{ last_lastName|default('') }}">
+                                    <div class="invalid-feedback">
+                                        Le nom est obligatoire.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="email" class="form-label">Adresse e-mail</label>
+                                <input type="email" name="email" id="email" 
+                                       class="form-control form-control-lg" required value="{{ last_email|default('') }}">
+                                <div class="invalid-feedback">
+                                    L’adresse e-mail est obligatoire.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4 position-relative">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <div class="input-group">
+                                    <input type="password" name="password" id="password" 
+                                           class="form-control form-control-lg" minlength="6" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword" tabindex="-1">
+                                        <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Le mot de passe doit contenir au moins 6 caractères.
+                                </div>
+                                <small class="text-muted">Utilisez au moins 6 caractères pour votre mot de passe.</small>
+                            </div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-lg" type="submit">
+                                    <i class="bi bi-person-plus me-2"></i>Créer un compte
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted">Vous avez déjà un compte ?</p>
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        © 2025 ECheck. Tous droits réservés.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card {
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-primary {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.btn-outline-primary:hover {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+/* Style forcé pour les messages d'erreur */
+.alert-danger {
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+    color: #721c24 !important;
+    font-weight: 600 !important;
+    border: 2px solid #dc3545 !important;
+}
+
+.alert-danger .bi {
+    color: #dc3545 !important;
+}
+</style>
+
+{# Réactivation du script pour afficher/masquer le mot de passe #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('bi-eye');
+            this.querySelector('i').classList.toggle('bi-eye-slash');
+        });
+    }
+});
+</script>
+{% endblock %}

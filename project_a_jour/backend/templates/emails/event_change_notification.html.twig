@@ -1,0 +1,93 @@
+{# templates/emails/event_change_notification.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification de Changement d'Événement</title>
+    <style>
+        body { background: #f8fafc; margin: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        .email-card {
+            max-width: 480px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 28px 28px 28px;
+            border: 1px solid #e3e3e3;
+        }
+        .bouquet {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .bouquet img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #f7c5c5;
+            background: #fff0f3;
+        }
+        .event-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 12px 0 6px 0;
+            text-align: center;
+        }
+        .message-content {
+            font-size: 16px;
+            color: #444;
+            margin: 14px 0 18px 0;
+            text-align: center;
+        }
+        .footer {
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-card">
+        <div class="qr-icon">
+            <img src="https://png.pngtree.com/png-clipart/20240127/original/pngtree-blue-qr-code-photo-png-image_14163580.png" alt="QR code Echeck-in" style="width:80px; height:80px; border-radius:16px; margin-bottom:8px; display:block; margin-left:auto; margin-right:auto;" />
+        </div>
+        <div class="event-title" style="color:#6f42c1;">{{ event.title }}</div>
+        <div class="message-content">
+            <p><strong>⚠️ Changement de programme</strong></p>
+            {{ message|nl2br }}
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 16px; margin: 20px 0; text-align: left;">
+                <p style="margin: 0 0 12px 0; font-weight: bold; color: #856404;">
+                    🔄 Reconfirmation nécessaire
+                </p>
+                <p style="margin: 0 0 12px 0; color: #856404;">
+                    Suite à ce changement, nous avons besoin de votre reconfirmation pour savoir si vous pourrez toujours participer à l'événement.
+                </p>
+                <div style="text-align: center; margin-top: 16px;">
+                    {% if participant.confirmationToken %}
+                        <a href="{{ url('app_invitation_reconfirm', {token: participant.confirmationToken}) }}" 
+                           style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+                            ✅ Confirmer ma présence
+                        </a>
+                        <br><br>
+                        <a href="{{ url('app_invitation_decline', {token: participant.confirmationToken}) }}" 
+                           style="background: #dc3545; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; display: inline-block; font-size: 14px;">
+                            ❌ Je ne pourrai pas venir
+                        </a>
+                    {% else %}
+                        <p style="color: #dc3545; font-style: italic;">
+                            Erreur: Token de confirmation manquant. Veuillez contacter l'organisateur.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            Cordialement,<br>
+            L'équipe Echeck-in
+        </div>
+    </div>
+</body>
+</html>

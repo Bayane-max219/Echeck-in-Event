@@ -1,0 +1,234 @@
+{# templates/event/gallery.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Galerie photos de l'événement</title>
+    <style>
+        body { background: #f8fafc; margin: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        .gallery-container {
+            max-width: 950px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 32px 28px 28px 28px;
+            border: 1px solid #e3e3e3;
+        }
+        .gallery-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6f42c1;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+        }
+        .gallery-item {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            overflow: hidden;
+            background: #f5f5fa;
+            width: 210px;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: box-shadow .15s;
+        }
+        .gallery-item:hover {
+            box-shadow: 0 6px 18px rgba(111,66,193,0.12);
+        }
+        .gallery-item img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+        .download-btn {
+            display: block;
+            margin: 0 auto 24px auto;
+            padding: 10px 28px;
+            background: linear-gradient(90deg,#6f42c1,#0d6efd);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .18s;
+        }
+        .download-btn:hover {
+            background: linear-gradient(90deg,#0d6efd,#6f42c1);
+        }
+        .gallery-item.selected {
+            border: 3px solid #6f42c1;
+            box-shadow: 0 6px 18px rgba(111,66,193,0.25);
+        }
+        .selection-checkbox {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .selection-controls {
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .selection-controls.active {
+            display: block;
+        }
+        .control-btn {
+            margin: 0 8px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-select-all {
+            background: #28a745;
+            color: white;
+        }
+        .btn-deselect-all {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-download-selected {
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="gallery-title">Photos souvenirs de l'événement "{{ event.title }}"</div>
+        {% if photos|length > 0 %}
+            <div class="selection-controls" id="selection-controls">
+                <button class="control-btn btn-select-all" onclick="selectAll()">Tout sélectionner</button>
+                <button class="control-btn btn-deselect-all" onclick="deselectAll()">Tout désélectionner</button>
+                <button class="control-btn btn-download-selected" onclick="downloadSelected()">Télécharger sélectionnées (<span id="selected-count">0</span>)</button>
+            </div>
+            <div class="gallery-grid">
+                {% for photo in photos %}
+                    <div class="gallery-item" data-photo-id="{{ photo.id }}">
+                        <input type="checkbox" class="selection-checkbox" onchange="updateSelection()">
+                        <a href="{{ asset('uploads/event_photos/' ~ photo.filename) }}" target="_blank" rel="noopener noreferrer" onclick="event.preventDefault();openLightbox('{{ asset('uploads/event_photos/' ~ photo.filename) }}');">
+                            <img src="{{ asset('uploads/event_photos/' ~ photo.filename) }}" alt="Photo événement" />
+                        </a>
+                        <a href="{{ asset('uploads/event_photos/' ~ photo.filename) }}" download style="position:absolute;bottom:8px;right:8px;text-decoration:none;">
+                            <button type="button" title="Télécharger cette photo" style="background:#0d6efd;border:none;border-radius:50%;padding:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v12M5 14l7 7 7-7"/>
+        <path d="M5 19h14"/>
+    </svg>
+</button>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="download-btn" href="{{ path('event_photos_download_zip', {'id': event.id}) }}">Tout télécharger (.zip)</a>
+        {% else %}
+            <div style="text-align:center;color:#888;font-size:1.2rem;">Aucune photo n'a encore été ajoutée pour cet événement.</div>
+        {% endif %}
+    </div>
+    <!-- Lightbox pour affichage grand format -->
+    <div id="lightbox" style="display:none;position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;">
+        <button onclick="closeLightbox()" style="position:absolute;top:24px;left:24px;background:#fff;border:none;border-radius:6px;padding:8px 18px;font-size:1.1rem;font-weight:600;color:#6f42c1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.10);">← Retour à la galerie</button>
+        <img id="lightbox-img" src="" alt="Photo événement" style="max-width:92vw;max-height:80vh;border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,0.20);margin-top:42px;" />
+    </div>
+    <script>
+    let selectedPhotos = new Set();
+    
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.getElementById('lightbox-img').src = '';
+        document.body.style.overflow = '';
+    }
+    
+    function updateSelection() {
+        const checkboxes = document.querySelectorAll('.selection-checkbox');
+        const controls = document.getElementById('selection-controls');
+        const countSpan = document.getElementById('selected-count');
+        
+        selectedPhotos.clear();
+        
+        checkboxes.forEach(checkbox => {
+            const galleryItem = checkbox.closest('.gallery-item');
+            const photoId = galleryItem.getAttribute('data-photo-id');
+            
+            if (checkbox.checked) {
+                selectedPhotos.add(photoId);
+                galleryItem.classList.add('selected');
+            } else {
+                galleryItem.classList.remove('selected');
+            }
+        });
+        
+        countSpan.textContent = selectedPhotos.size;
+        
+        if (selectedPhotos.size > 0) {
+            controls.classList.add('active');
+        } else {
+            controls.classList.remove('active');
+        }
+    }
+    
+    function selectAll() {
+        const checkboxes = document.querySelectorAll('.selection-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        updateSelection();
+    }
+    
+    function deselectAll() {
+        const checkboxes = document.querySelectorAll('.selection-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        updateSelection();
+    }
+    
+    function downloadSelected() {
+        if (selectedPhotos.size === 0) {
+            alert('Veuillez sélectionner au moins une photo.');
+            return;
+        }
+        
+        const photoIds = Array.from(selectedPhotos).join(',');
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ path("event_photos_download_selected_zip_public", {id: event.id}) }}';
+        
+        const idsInput = document.createElement('input');
+        idsInput.type = 'hidden';
+        idsInput.name = 'photo_ids';
+        idsInput.value = photoIds;
+        
+        form.appendChild(idsInput);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
+    
+    // Fermer avec ESC
+    document.addEventListener('keydown', function(e) { if(e.key==='Escape'){ closeLightbox(); } });
+    </script>
+</body>
+</html>

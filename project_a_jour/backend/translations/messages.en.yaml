@@ -1,0 +1,273 @@
+participant_status:
+  pending: Pending
+  invited: Invited
+  confirmed: Confirmed
+  checked_in: Checked In
+events:
+  created_success: Event created successfully.
+  updated_success: Event updated successfully.
+  deleted_success: Event deleted successfully.
+participants:
+  added_and_invited: "Participant added and invitation sent."
+  added_success: "Participant added successfully."
+  updated_success: "Participant updated successfully."
+  deleted_success: "Participant deleted successfully."
+  import_completed: "Import completed: %imported% imported, %skipped% skipped"
+  import_failed: "Import failed"
+  please_select_csv: "Please select a CSV file."
+  invitations_sent: "Invitations sent to %count% participants."
+  invitation_sent_to: "Invitation sent to %email%"
+nav:
+  dashboard: Dashboard
+  events: Events
+  agents: Agents
+  phone: Phone
+  company: Company
+  position: Position
+  send_invitation_email: Send invitation email
+  event_title: Event Title
+  description: Description
+  start_date_time: Start Date & Time
+  end_date_time: End Date & Time
+  draft: Draft
+  active: Active
+  completed: Completed
+  cancelled: Cancelled
+  full_name: Full Name
+  password: Password
+  roles: Roles
+  select_event: Select an event
+  logout: Logout
+  language: Language
+  english: English
+  french: French
+app:
+  title: Echeck-in Event
+  toggle_theme: Toggle theme
+
+event:
+  send_menu: Send menu to participants
+  send_gallery: Send photo gallery to guests
+  notify_guests: Notify guests
+  manage_photos: Manage photos
+notification_sent: Notification sent to all guests!
+change_notification_subject: "Change regarding event \"%event%\""
+export:
+  event_report: Event Report
+  event_details: Event Details
+  date: Date
+  location: Location
+  total_participants: Total Participants
+  checked_in: Checked In
+  attendance_rate: Attendance Rate
+  participants_list: Participants List
+  checkin_time: Check-in Time
+  view_all_participants: View All Participants
+  export_report: Export Report
+common:
+  draft: Draft
+  active: Active
+  no_participants: No participants yet
+  add_participants_instruction: Start by adding participants manually or importing from a CSV file.
+photos:
+  add_photo: "Add photo"
+  event_photos: "Event photos"
+  uploaded_photos: "Uploaded photos"
+  no_photos: "No photos for this event"
+  select_all: "Select all"
+  deselect_all: "Deselect all"
+  delete: "Delete"
+  back_to_event: "Back to event"
+  dashboard: Dashboard
+  my_events: My Events
+  new_event: New Event
+  recent_events: Recent Events
+  view_all_events: View All Events
+  no_events: No events created yet.
+  create_first_event: Create Your First Event
+  phone: Phone
+  company: Company
+  position: Position
+  send_invitation_email: Send invitation email
+  event: Event
+  date: Date
+  location: Location
+  participants: Participants
+  participant: Participant
+  pending: Pending
+  status: Status
+  actions: Actions
+  view: View
+  edit: Edit
+  export: Export
+  cancel: Cancel
+  create: Create
+  update: Update
+  save_changes: Save Changes
+  manage_participants: Manage Participants
+  edit_event: Edit Event
+  export_data: Export Data
+  delete_event: Delete Event
+  view_all_participants: View All Participants
+  export_report: Export Report
+  add_participants: Add Participants
+  checkin_time: Check-in Time
+  checked_in_by: Checked In By
+  notes: Notes
+  view_all_checkins: View All Check-ins
+  statistics: Statistics
+  total_events: Total Events
+  active_events: Active Events
+  total_participants: Total Participants
+  total_checkins: Total Check-ins
+  checked_in: Checked In
+  attendance_rate: Attendance Rate
+  participants_list: Participants List
+  search_participants: Search participants...
+  not_checked_in: Not checked in
+  qr_code: QR Code
+  send_invitations: Send Invitations
+  import_csv: Import CSV
+  add_participant: Add Participant
+  add_new_participant: Add New Participant
+  import_participants_csv: Import Participants from CSV
+  select_csv_file: Select CSV File
+  please_select_csv: Please select a CSV file.
+  download_sample_csv: Download Sample CSV
+  welcome_back: Welcome Back!
+  sign_in_to_account: Sign in to your Echeck-in Event account
+  email_address: Email address
+  email: Email
+  password: Password
+  sign_in: Sign In
+  forgot_password: Forgot password?
+  dont_have_account: Don't have an account?
+  create_account: Create Account
+  already_have_account: Already have an account?
+  all_rights_reserved: All rights reserved.
+  my_profile: My Profile
+  first_name: First Name
+  last_name: Last Name
+  roles: Roles
+  name: Name
+  created_at: Created at
+  back_to_list: Back to list
+  agent_information: Agent information
+  full_name: Full name
+  status_not_confirmed: Not confirmed
+  confirmed: Confirmed
+  edit_agent: Edit agent
+  resend_confirmation_email: Resend confirmation email
+  delete_agent: Delete agent
+  list_of_agents: List of Agents
+  no_agents_found: No agents found
+  create_first_agent: Create First Agent
+  new_agent: New Agent
+  back: Back
+  save: Save
+  agent: Agent
+  events: Events
+  "Nouveau mot de passe (optionnel)": "New password (optional)"
+  "Laisser vide pour garder le mot de passe actuel": "Leave blank to keep current password"
+  "Laisser ce champ vide si vous ne voulez pas changer le mot de passe.": "Leave this field blank if you do not want to change the password."
+  "Commencez par créer votre premier agent pour gérer les événements.": "Start by creating your first agent to manage events."
+  "Administrateur": "Administrator"
+  "Superviseur": "Supervisor"
+  "Êtes-vous sûr de vouloir supprimer cet agent ?": "Are you sure you want to delete this agent?"
+  "Dernière mise à jour": "Last updated"
+  "Agent depuis": "Agent since"
+  "Êtes-vous sûr de vouloir supprimer cet agent ? Cette action ne peut pas être annulée.": "Are you sure you want to delete this agent? This action cannot be undone."
+  "Envoyer des invitations à tous les participants en attente ?": "Send invitations to all pending participants?"
+  "Aucun participant pour le moment": "No participants yet"
+  "Commencez par ajouter des participants manuellement ou en important depuis un fichier CSV.": "Start by adding participants manually or importing from a CSV file."
+  "En attente": "Pending"
+  "Participant": "Participant"
+  "Contact": "Contact"
+  "Entreprise": "Company"
+  "Check-in": "Check-in"
+  "Êtes-vous sûr de vouloir supprimer ce participant ?": "Are you sure you want to delete this participant?"
+  "Envoyer une invitation": "Send invitation"
+  "Êtes-vous sûr de vouloir supprimer cet événement ?": "Are you sure you want to delete this event?"
+  "Un email d'invitation avec QR code sera envoyé au participant.": "An invitation email with QR code will be sent to the participant."
+  update_event: Update Event
+  create_event: Create Event
+  cancel_action: Cancel
+  event_details: Event Details
+  description: Description
+  start_date_time: Start Date & Time
+  end_date_time: End Date & Time
+  organizer: Organizer
+  created: Created
+  recent_checkins: Recent Check-ins
+
+auth:
+  register: Register
+  create_account: Create Account
+  join_platform: Join Echeck-in Event to manage your events
+  password_hint: Minimum 6 characters
+  already_have_account: Already have an account?
+  sign_in: Sign In
+  email_must_be_gmail: Email must be a valid @gmail.com address.
+  account_exists: This account already exists.
+  account_created_success: Account created successfully! You can now log in.
+
+validation:
+  first_name_required: Please provide your first name.
+  last_name_required: Please provide your last name.
+  email_required: Please provide a valid email address.
+  password_min_length: Password must be at least 6 characters long.
+  password_required: Please enter a password
+  confirm_password_required: Please confirm your password
+
+reset_password:
+  title: Reset your password
+  instruction: Enter your email address to receive a password reset link.
+  send_link: Send reset link
+  back_to_login: Back to login
+  change_password: Change password
+  new_password: New password
+  confirm_new_password: Confirm new password
+  email_sent: A reset email has been sent if the address exists.
+  invalid_or_expired: The reset link is invalid or has expired.
+  passwords_do_not_match: Passwords do not match. Please try again.
+  reset_success: Your password has been reset successfully. You can now log in.
+
+email:
+  invitation_title: Invitation
+  youre_invited: You're Invited!
+  dear: Dear
+  invitation_message: "You are cordially invited to attend <strong>%event%</strong>."
+  time: Time
+  confirm_instruction: "Please confirm your attendance by clicking the button below:"
+  confirm_attendance: Confirm Attendance
+  important: Important
+  qr_code_instruction: Please bring the attached QR code with you to the event for quick check-in.
+  looking_forward: We look forward to seeing you at the event!
+  best_regards: Best regards
+  event_organizer: Event Organizer
+  automated_message: This is an automated message. Please do not reply to this email.
+  hello: Hello
+  reset_requested: You requested to reset your password.
+  reset_click_button: Click the button below to create a new password:
+  reset_my_password: Reset my password
+  reset_link_expire: This link will expire in 1 hour.
+  ignore_if_not_requested: If you did not request this, you can ignore this email.
+
+confirmation:
+  success_title: Confirmation Successful
+  agent_confirmed: Your agent account has been confirmed!
+  thank_you: Thank you
+  can_login: You can now log in to the mobile app.
+  go_homepage: Go to Homepage
+  already_confirmed_title: Already Confirmed
+  already_confirmed: Your agent account is already confirmed.
+
+
+# Aliases at root level for templates using unscoped keys
+event_details: Event Details
+description: Description
+start_date_time: Start Date & Time
+end_date_time: End Date & Time
+organizer: Organizer
+created: Created
+recent_checkins: Recent Check-ins

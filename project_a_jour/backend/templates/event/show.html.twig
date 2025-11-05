@@ -1,0 +1,305 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.title }} - {{ 'app.title'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('app_events_index') }}">Événements</a></li>
+                            <li class="breadcrumb-item active">{{ event.title }}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-0">{{ event.title }}</h1>
+                    {% set statusClass = event.status == 'active' ? 'success' : (event.status == 'draft' ? 'warning' : 'secondary') %}
+                    <span class="badge bg-{{ statusClass }} fs-6">{{ event.status == 'active' ? 'Actif' : (event.status == 'draft' ? 'Brouillon' : (event.status == 'cancelled' ? 'Annulé' : (event.status == 'completed' ? 'Terminé' : event.status))) }}</span>
+                </div>
+                <div class="btn-group" role="group">
+    <a href="{{ path('app_events_photos', {id: event.id}) }}" class="btn" style="background:linear-gradient(90deg,#8d5524,#e1ad01);color:#fff;border:none;margin-right:14px;">
+        <i class="bi bi-image me-2"></i>Gérer les photos
+    </a>
+    <form method="post" action="{{ path('app_events_send_menu', {id: event.id}) }}" style="display:inline;">
+        <button type="submit" class="btn" style="background:#198754;color:#fff;border:none;margin-right:14px;">
+            <i class="bi bi-egg-fried me-2"></i>Envoyer le menu
+        </button>
+    </form>
+    <form method="post" action="{{ path('app_events_send_gallery', {id: event.id}) }}" style="display:inline;">
+        <button type="submit" class="btn btn-danger me-3">
+            <i class="bi bi-images me-2"></i>Envoyer la galerie
+        </button>
+    </form>
+    <a href="{{ path('app_participants_index', {eventId: event.id}) }}" class="btn btn-primary">
+        <i class="bi bi-people me-2"></i>Gérer les participants
+    </a>
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#notifyModal">
+        <i class="bi bi-envelope me-2"></i>Notifier les invités
+    </button>
+</div>
+
+
+<!-- Modal Notification Invités -->
+<div class="modal fade" id="notifyModal" tabindex="-1" aria-labelledby="notifyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{{ path('app_events_notify_guests', {id: event.id}) }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notifyModalLabel">Notifier les invités</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="notifyMessage" class="form-label">Message</label>
+            <textarea class="form-control" id="notifyMessage" name="message" rows="5">Bonjour,\n\nNous vous informons qu'un changement a été effectué concernant l'événement "{{ event.title }}".\nMerci de vérifier la nouvelle date et heure dans votre espace participant.\n\nCordialement,\nL'équipe Echeck-in</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-primary">Envoyer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_events_export', {id: event.id}) }}">
+                                <i class="bi bi-download me-2"></i>Exporter les données
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="post" action="{{ path('app_events_delete', {id: event.id}) }}" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');" 
+                                      class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                    <button class="dropdown-item text-danger" type="submit">
+                                        <i class="bi bi-trash me-2"></i>Supprimer l'événement
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Event Details -->
+        <div class="col-12">
+        </div>
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Détails de l’événement
+                    </h5>
+                </div>
+                {% if event.menu %}
+                <div class="alert alert-info mt-3" style="font-size:1.06rem;">
+                    <span style="font-size:1.3em;">🍽️</span>
+                    <strong>Menu</strong><br>
+                    <div class="mt-2">{{ event.menu|raw }}</div>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    {% if event.description %}
+                        <div class="mb-4">
+                            <h6 class="text-muted">Description</h6>
+                            <p>{{ event.description }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Date de début</h6>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar3 text-primary me-2"></i>
+                                <span>{{ event.startDate|date('d F Y', 'Europe/Paris')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</span>
+                            </div>
+                            <div class="d-flex align-items-center mt-1">
+                                <i class="bi bi-clock text-primary me-2"></i>
+                                <span>{{ event.startDate|date('g:i A') }}</span>
+                            </div>
+                        </div>
+                        {% if event.endDate %}
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Date de fin</h6>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar3 text-primary me-2"></i>
+                                    <span>{{ event.endDate|date('d F Y', 'Europe/Paris')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</span>
+                                </div>
+                                <div class="d-flex align-items-center mt-1">
+                                    <i class="bi bi-clock text-primary me-2"></i>
+                                    <span>{{ event.endDate|date('g:i A') }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-muted">Lieu</h6>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-geo-alt text-primary me-2"></i>
+                            <span>{{ event.location }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Organisateur</h6>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person text-primary me-2"></i>
+                                <span>{{ event.organizer.fullName }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Créé le</h6>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-plus text-primary me-2"></i>
+                                <span>{{ event.createdAt|date('d F Y', 'Europe/Paris')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-bar-chart me-2"></i>Statistiques
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <h3 class="text-primary mb-0">{{ stats.totalParticipants }}</h3>
+                                <small class="text-muted">Participants totaux</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-success mb-0">{{ stats.checkedInParticipants }}</h3>
+                            <small class="text-muted">Participants présents</small>
+                        </div>
+                    </div>
+
+                    {% if stats.totalParticipants > 0 %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">Taux de présence</span>
+                                <span class="fw-bold">{{ stats.attendanceRate|round(1) }}%</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: {{ stats.attendanceRate }}%" 
+                                     aria-valuenow="{{ stats.attendanceRate }}" 
+                                     aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_participants_index', {eventId: event.id}) }}" 
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-people me-2"></i>Voir tous les participants
+                            </a>
+                            <a href="{{ path('app_events_export', {id: event.id}) }}" 
+                               class="btn btn-outline-success">
+                                <i class="bi bi-download me-2"></i>Exporter le rapport
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="bi bi-people display-4 text-muted mb-3"></i>
+                            <p class="text-muted">Aucun participant</p>
+                            <a href="{{ path('app_participants_new', {eventId: event.id}) }}" 
+                               class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Ajouter des participants
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Check-ins -->
+    {% if event.checkIns|length > 0 %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history me-2"></i>Dernières présences
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Participants</th>
+                                        <th>Heure de présence</th>
+                                        <th>Présenté par</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for checkIn in event.checkIns|slice(0, 10) %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm bg-success rounded-circle d-flex align-items-center justify-content-center me-3">
+                                                        <i class="bi bi-check text-white"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">{{ checkIn.participant.fullName }}</h6>
+                                                        <small class="text-muted">{{ checkIn.participant.email }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>{{ checkIn.checkedInAt|date('d F Y', 'Europe/Paris')|replace({'January':'janvier','February':'février','March':'mars','April':'avril','May':'mai','June':'juin','July':'juillet','August':'août','September':'septembre','October':'octobre','November':'novembre','December':'décembre'}) }}</div>
+                                                <small class="text-muted">{{ checkIn.checkedInAt|date('H:i:s') }}</small>
+                                            </td>
+                                            <td>{{ checkIn.checkedInBy ?? 'System' }}</td>
+                                            <td>{{ checkIn.notes ?? '-' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if event.checkIns|length > 10 %}
+                            <div class="text-center mt-3">
+                                <a href="{{ path('app_participants_index', {eventId: event.id}) }}" 
+                                   class="btn btn-outline-primary">
+                                    {{ 'common.view_all_checkins'|trans }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.avatar-sm {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+</style>
+{% endblock %}

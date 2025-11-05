@@ -1,0 +1,229 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l’événement : {{ event.title }} - Echeck · Gestion d’événements{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">
+                        <i class="bi bi-pencil me-2"></i>Modifier l’événement : {{ event.title }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.title.vars.id }}" class="form-label">Titre de l’événement</label>
+                            {{ form_widget(form.title, {'attr': {'class': 'form-control', 'required': true}}) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.description.vars.id }}" class="form-label">Description</label>
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.startDate.vars.id }}" class="form-label">Date et heure de début</label>
+                            {{ form_widget(form.startDate, {'attr': {'class': 'form-control', 'required': true}}) }}
+                            {{ form_errors(form.startDate) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.endDate.vars.id }}" class="form-label">Date et heure de fin</label>
+                            {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.endDate) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.location.vars.id }}" class="form-label">Lieu</label>
+                            {{ form_widget(form.location, {'attr': {'class': 'form-control', 'required': true}}) }}
+                            {{ form_errors(form.location) }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.status.vars.id }}" class="form-label">Statut</label>
+                            {{ form_widget(form.status, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="{{ form.menu.vars.id }}" class="form-label">Menu / Restauration prévue (optionnel)</label>
+                            {{ form_widget(form.menu, {'attr': {'class': 'form-control rich-text-editor', 'rows': 6}}) }}
+                            {{ form_errors(form.menu) }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_events_show', {id: event.id}) }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-2"></i>Enregistrer les modifications
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.rich-text-toolbar {
+    border: 1px solid #ced4da;
+    border-bottom: none;
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 0.375rem 0.375rem 0 0;
+}
+.rich-text-toolbar button {
+    border: none;
+    background: none;
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #495057;
+}
+.rich-text-toolbar button:hover {
+    background: #e9ecef;
+}
+.rich-text-toolbar button.active {
+    background: #007bff;
+    color: white;
+}
+.rich-text-editor {
+    border-radius: 0 0 0.375rem 0.375rem !important;
+    border-top: none !important;
+    background: white;
+    color: #495057;
+}
+
+/* Dark mode support */
+[data-bs-theme="dark"] .rich-text-toolbar {
+    background: #343a40;
+    border-color: #495057;
+}
+[data-bs-theme="dark"] .rich-text-toolbar button {
+    color: #f8f9fa;
+}
+[data-bs-theme="dark"] .rich-text-toolbar button:hover {
+    background: #495057;
+}
+[data-bs-theme="dark"] .rich-text-toolbar button.active {
+    background: #0d6efd;
+    color: white;
+}
+[data-bs-theme="dark"] .rich-text-editor {
+    background: #212529;
+    color: #f8f9fa;
+    border-color: #495057;
+}
+</style>
+
+<script>
+// Simple rich text editor implementation
+document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('.rich-text-editor');
+    
+    textareas.forEach(function(textarea) {
+        // Create toolbar
+        const toolbar = document.createElement('div');
+        toolbar.className = 'rich-text-toolbar';
+        toolbar.innerHTML = `
+            <button type="button" data-command="bold" title="Gras"><b>B</b></button>
+            <button type="button" data-command="italic" title="Italique"><i>I</i></button>
+            <button type="button" data-command="underline" title="Souligné"><u>U</u></button>
+            <span style="margin: 0 8px;">|</span>
+            <button type="button" data-command="insertUnorderedList" title="Liste à puces">• Liste</button>
+            <button type="button" data-command="insertOrderedList" title="Liste numérotée">1. Liste</button>
+            <span style="margin: 0 8px;">|</span>
+            <button type="button" data-command="justifyLeft" title="Aligner à gauche">←</button>
+            <button type="button" data-command="justifyCenter" title="Centrer">↔</button>
+            <button type="button" data-command="justifyRight" title="Aligner à droite">→</button>
+        `;
+        
+        // Create contenteditable div
+        const editor = document.createElement('div');
+        editor.contentEditable = true;
+        editor.className = 'form-control rich-text-editor';
+        editor.style.minHeight = '200px';
+        editor.innerHTML = textarea.value;
+        
+        // Insert toolbar and editor before textarea
+        textarea.parentNode.insertBefore(toolbar, textarea);
+        textarea.parentNode.insertBefore(editor, textarea);
+        textarea.style.display = 'none';
+        
+        // Toolbar event handlers
+        toolbar.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') {
+                e.preventDefault();
+                const command = e.target.getAttribute('data-command');
+                document.execCommand(command, false, null);
+                editor.focus();
+                
+                // Update button states
+                updateToolbarStates(toolbar, editor);
+            }
+        });
+        
+        // Update textarea value when editor content changes
+        editor.addEventListener('input', function() {
+            textarea.value = editor.innerHTML;
+        });
+        
+        // Update toolbar button states
+        function updateToolbarStates(toolbar, editor) {
+            const buttons = toolbar.querySelectorAll('button[data-command]');
+            buttons.forEach(function(button) {
+                const command = button.getAttribute('data-command');
+                if (document.queryCommandState(command)) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+        
+        // Update states on selection change
+        editor.addEventListener('mouseup', function() {
+            updateToolbarStates(toolbar, editor);
+        });
+        editor.addEventListener('keyup', function() {
+            updateToolbarStates(toolbar, editor);
+        });
+    });
+});
+
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

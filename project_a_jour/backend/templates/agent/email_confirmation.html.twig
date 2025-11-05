@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de votre compte agent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .header {
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            padding: 2.2em 0 1.2em 0;
+            text-align: center;
+            border-radius: 0 0 24px 24px;
+        }
+        .header-logo {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 0.7em;
+        }
+        .header-title {
+            color: #fff;
+            font-size: 1.4em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+        .main-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 6px 32px 0 #007bff22;
+            max-width: 440px;
+            margin: -2.5em auto 2em auto;
+            padding: 2.5em 2em 2em 2em;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .main-card h2 {
+            color: #007bff;
+            margin-bottom: 0.2em;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        .main-card p {
+            color: #222;
+            font-size: 1.08em;
+            margin: 0.6em 0 1.6em 0;
+        }
+        .accent-line {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            border-radius: 2px;
+            margin: 1.2em auto 2em auto;
+        }
+        .btn {
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff !important;
+            border: none;
+            padding: 1.1em 2.5em;
+            border-radius: 7px;
+            font-size: 1.18em;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 2px 12px #007bff33;
+            transition: background 0.18s;
+            display: inline-block;
+            margin-top: 1.1em;
+            margin-bottom: 1.1em;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #0096c7 100%);
+        }
+        .info-box {
+            background: #e8f3ff;
+            color: #007bff;
+            border-radius: 7px;
+            padding: 0.85em 1em;
+            font-size: 1em;
+            margin: 1.5em auto 0.5em auto;
+            max-width: 340px;
+        }
+        .footer {
+            color: #888;
+            font-size: 0.97em;
+            margin-top: 2.8em;
+            text-align: center;
+        }
+        @media (max-width: 520px) {
+            .main-card { padding: 1.2em 0.5em; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <!-- If you have a valid logo URL, replace below. Otherwise, just show the text -->
+        <!-- <img src="https://your-valid-logo-url.png" class="header-logo" alt="Echeck-in Event Logo" style="margin-bottom: 0.7em;"/> -->
+        <div class="header-title">Echeck-in Event</div>
+    </div>
+</div>
+    <div class="main-card">
+        <h2>Bienvenue {{ agent.nom|default('Agent') }} !</h2>
+<div class="accent-line"></div>
+<div class="info-box" style="margin-bottom:1.2em;">
+    <b>Identifiants pour l'application mobile :</b><br>
+    <span>Email :</span> <b>{{ agent.email }}</b><br>
+    <span>Mot de passe :</span> <b>{% if plainPassword is defined and plainPassword %}{{ plainPassword }}{% else %}Non communiqué pour des raisons de sécurité. Veuillez contacter l’administrateur si vous souhaitez le réinitialiser.{% endif %}</b><br>
+    <span style="font-size:0.97em; color:#888;">(Gardez ces informations en sécurité. Vous en aurez besoin pour vous connecter à l'application mobile.)</span><br>
+    <span>Événement :</span> <b>{{ agent.event ? agent.event.title : 'Non lié' }}</b>
+</div>
+<p>Nous sommes ravis de vous accueillir sur <b>Echeck-in Event</b> en tant qu'agent.<br>
+Pour activer votre compte et accéder à votre tableau de bord, veuillez confirmer votre adresse e-mail en cliquant sur le bouton ci-dessous :</p>
+<a href="{{ confirmationUrl }}" class="btn">Confirmer mon compte</a>
+<div class="info-box">
+    Si vous n'avez pas demandé cette inscription, vous pouvez ignorer cet e-mail.
+</div>
+    </div>
+    <div class="footer">
+        &copy; {{ "now"|date("Y") }} Echeck-in Event. Tous droits réservés.<br>
+Au plaisir de vous retrouver lors de l’événement !
+    </div>
+</body>
+</html>

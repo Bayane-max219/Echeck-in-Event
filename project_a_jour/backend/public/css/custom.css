@@ -1,0 +1,7 @@
+.btn-group > .btn:not(:last-child), .btn-group-vertical > .btn:not(:last-child) {
+    margin-right: 20px;
+}
+
+.btn, .btn-group > .btn, .btn-group-vertical > .btn {
+    border-radius: 10px !important;
+}

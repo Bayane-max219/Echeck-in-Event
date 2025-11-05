@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-circle me-2"></i>Mon profil</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Prénom</dt>
+                        <dd class="col-sm-8">{{ user.firstName }}</dd>
+                        <dt class="col-sm-4">Nom</dt>
+                        <dd class="col-sm-8">{{ user.lastName }}</dd>
+                        <dt class="col-sm-4">Adresse e-mail</dt>
+                        <dd class="col-sm-8">{{ user.email }}</dd>
+                        <dt class="col-sm-4">Rôles</dt>
+                        <dd class="col-sm-8">
+    {% set rolesMap = {
+        'ROLE_ADMIN': 'Administrateur',
+        'ROLE_USER': 'Utilisateur',
+        'ROLE_AGENT': 'Agent',
+        'ROLE_SUPER_ADMIN': 'Super administrateur'
+    } %}
+    {{ user.roles|map(r => rolesMap[r]|default(r))|join(', ') }}
+</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
