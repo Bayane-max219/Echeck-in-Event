@@ -5,22 +5,37 @@ Solution numérique complète pour la gestion d'événements avec invitations é
 
 ## 🖼️ Aperçu du projet
 
-### Interface Web - Dashboard
-![Dashboard Organisateur](screenshots/02-Dashboard.png)
+### 01 – Page de connexion (Login)
+![01 – Login](screenshots/01-Login.png)
 
-### Gestion des Participants
-![Liste Participants](screenshots/04-Participant.png)
+### 02 – Dashboard organisateur
+![02 – Dashboard](screenshots/02-Dashboard.png)
 
-### Application Mobile - Scan QR
-![App Mobile Scan](screenshots/08-Mobile-app-login.png)
+### 03 – Liste des événements
+![03 – Events List](screenshots/03-Events-List.png)
 
-### Email d'Invitation avec QR Code
-![Email Invitation](screenshots/07-Invitation-Email.png)
+### 04 – Gestion des participants
+![04 – Participant](screenshots/04-Participant.png)
 
-### Galerie Photos
-![Galerie Photos](screenshots/05-Gallery.png)
+### 05 – Galerie photos d’un événement
+![05 – Gallery](screenshots/05-Gallery.png)
 
-*Plus de captures d'écran disponibles dans le dossier [screenshots/](screenshots/)*
+### 06 – Gestion des agents
+![06 – Agents](screenshots/06-Agents.png)
+
+### 07 – Email d’invitation avec QR code
+![07 – Invitation Email](screenshots/07-Invitation-Email.png)
+
+### 08 – Application mobile – Connexion
+![08 – Mobile App Login](screenshots/08-Mobile-app-login.png)
+
+### 09 – Application mobile – Accueil
+![09 – Mobile App Home](screenshots/09-Mobile-app-Home.png)
+
+### 10 – Application mobile – Scan QR
+![10 – Scan](screenshots/10-Scan.png)
+
+*Toutes les captures ci-dessus proviennent du dossier [screenshots/](screenshots/)*
 
 ## 🏗️ Architecture Technique
 
