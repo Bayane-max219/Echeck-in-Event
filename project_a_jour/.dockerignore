@@ -1,0 +1,14 @@
+backend/vendor/
+backend/var/
+backend/.env.local
+backend/.env.*.local
+backend/config/jwt/*.pem
+backend/node_modules/
+.git/
+*.log
+mobile-app/
+mobile_app/
+supabase/
+screenshots/
+docs/
+deployment/
