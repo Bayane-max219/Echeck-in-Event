@@ -101,7 +101,41 @@ Solution numérique complète pour la gestion d'événements avec invitations é
 - ✅ Export CSV/Excel
 - ✅ Rapports détaillés
 
-## 🚀 Installation et Configuration
+## 🐳 Démarrage rapide avec Docker
+
+Le projet web est **conteneurisé avec Docker** — démarrage en une seule commande.
+
+### Prérequis
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installé
+
+### Lancement
+```bash
+cd project_a_jour
+
+docker compose up -d --build
+# → http://localhost
+```
+
+### Architecture Docker
+| Service | Technologie | Rôle |
+|---|---|---|
+| `nginx` | Nginx 1.25 | Reverse proxy + assets statiques |
+| `backend` | PHP 8.2-FPM | API Symfony (multi-stage build) |
+| `db` | MySQL 8.0 | Base de données |
+
+Les migrations Doctrine et la génération des clés JWT s'exécutent **automatiquement** au premier démarrage.
+
+### Commandes utiles
+```bash
+docker compose logs -f backend      # Voir les logs
+docker compose exec backend bash    # Accéder au container
+docker compose down                 # Arrêter
+docker compose down -v              # Arrêter + supprimer les volumes
+```
+
+---
+
+## ⚙️ Installation manuelle (sans Docker)
 
 ### Prérequis
 - PHP 8.1+
@@ -112,26 +146,20 @@ Solution numérique complète pour la gestion d'événements avec invitations é
 
 ### Backend (Symfony)
 ```bash
-# Installation des dépendances
-composer install
+cd project_a_jour/backend
 
-# Configuration de la base de données
+composer install
 cp .env.example .env
 # Modifiez DATABASE_URL dans .env
 
-# Génération des clés JWT
 php bin/console lexik:jwt:generate-keypair
-
-# Migrations
 php bin/console doctrine:migrations:migrate
-
-# Démarrage du serveur
 symfony server:start
 ```
 
 ### Application Mobile (Flutter)
 ```bash
-cd mobile_app
+cd project_a_jour/mobile_app
 flutter pub get
 flutter run
 ```
